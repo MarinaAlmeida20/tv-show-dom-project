@@ -1,38 +1,46 @@
-//You can edit ALL of the code here
-function setup() {
-  const allEpisodes = getAllEpisodes();
-  makePageForEpisodes(allEpisodes);
-}
+const rootElem = document.getElementById("root");
+const ulElem = document.getElementById("episodesList");
+const searchBar = document.getElementById("searchBar");
+const totalEpisodesDisplayed = document.getElementById(
+  "totalEpisodesDisplayed"
+);
+let searchTerm = "";
 
 function makePageForEpisodes(episodeList) {
-  const rootElem = document.getElementById("root");
-  // rootElem.textContent = `Got ${episodeList.length} episode(s)`;
+  totalEpisodesDisplayed.textContent = `Displaying ${episodeList.length}/${episodeList.length} episode(s)`;
 
-  episodeList.forEach((episode) => {
-    // // create Elements
-    const divElement = document.createElement("div");
+  const showList = () => {
+    ulElem.innerHTML = "";
+    episodeList
+      .filter((episode) => {
+        return (
+          episode.name.toLowerCase().includes(searchTerm) ||
+          episode.summary.toLowerCase().includes(searchTerm)
+        );
+      })
+      .forEach((episode) => {
+        const li = document.createElement("li");
+        li.setAttribute("class", "content");
+        li.innerHTML = `
+      <h3 class="heading">${episode.name} - S0${episode.season}E0${episode.number}</h3>
+      <img class="image" src="${episode.image.medium}" />
+      <p>${episode.summary}</p>
+      `;
+        console.log(li.length);
+        ulElem.appendChild(li);
+      });
+  };
+  showList();
 
-    const headingElem = document.createElement("h3");
-    const imageElem = document.createElement("img");
-    const summaryElem = document.createElement("p");
-
-    // set the class to the Elements to use in CSS
-    divElement.setAttribute("class", "content");
-    headingElem.setAttribute("class", "heading");
-    imageElem.setAttribute("class", "image");
-
-    // set Elements
-    headingElem.innerHTML = `${episode.name} - S0${episode.season}E0${episode.number}`;
-
-    imageElem.src = `${episode.image.medium}`;
-
-    summaryElem.innerHTML = `${episode.summary}`;
-
-    // append Element to the page
-    divElement.append(headingElem, imageElem, summaryElem);
-
-    rootElem.append(divElement);
+  searchBar.addEventListener("keyup", (event) => {
+    searchTerm = event.target.value.toLowerCase();
+    showList();
   });
+}
+
+function setup() {
+  const allEpisodes = getAllEpisodes(); // API
+  makePageForEpisodes(allEpisodes);
 }
 
 window.onload = setup;

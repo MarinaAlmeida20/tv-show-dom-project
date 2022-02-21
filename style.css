@@ -46,6 +46,30 @@ p {
 }
 
 .image {
-  /* object-fit: contain; */
   width: 220px;
+}
+
+.searchWrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+input {
+  width: 250px;
+  height: 20px;
+  text-align: center;
+}
+
+.totalEpisodesDisplayed {
+  margin-left: 20px;
+}
+
+ul {
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 0;
+  flex-wrap: wrap;
 }
