@@ -1,4 +1,3 @@
-const rootElem = document.getElementById("root");
 const ulElem = document.getElementById("episodesList");
 const searchBar = document.getElementById("searchBar");
 const totalEpisodesDisplayed = document.getElementById(
@@ -7,8 +6,6 @@ const totalEpisodesDisplayed = document.getElementById(
 let searchTerm = "";
 
 function makePageForEpisodes(episodeList) {
-  totalEpisodesDisplayed.textContent = `Displaying ${episodeList.length}/${episodeList.length} episode(s)`;
-
   const showList = () => {
     ulElem.innerHTML = "";
     episodeList
@@ -18,16 +15,18 @@ function makePageForEpisodes(episodeList) {
           episode.summary.toLowerCase().includes(searchTerm)
         );
       })
-      .forEach((episode) => {
+      .forEach((episode, index) => {
+        let interator = index + 1;
         const li = document.createElement("li");
         li.setAttribute("class", "content");
         li.innerHTML = `
-      <h3 class="heading">${episode.name} - S0${episode.season}E0${episode.number}</h3>
-      <img class="image" src="${episode.image.medium}" />
-      <p>${episode.summary}</p>
-      `;
-        console.log(li.length);
+        <h3 class="heading">${episode.name} - S0${episode.season}E0${episode.number}</h3>
+        <img class="image" src="${episode.image.medium}" />
+        <p>${episode.summary}</p>
+        `;
+
         ulElem.appendChild(li);
+        totalEpisodesDisplayed.textContent = `Displaying ${interator}/${episodeList.length} episode(s)`;
       });
   };
   showList();
@@ -35,7 +34,6 @@ function makePageForEpisodes(episodeList) {
   searchBar.addEventListener("keyup", (event) => {
     searchTerm = event.target.value.toLowerCase();
     showList();
-    searchTerm = "";
   });
 }
 
