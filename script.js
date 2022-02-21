@@ -35,6 +35,7 @@ function makePageForEpisodes(episodeList) {
   searchBar.addEventListener("keyup", (event) => {
     searchTerm = event.target.value.toLowerCase();
     showList();
+    searchTerm = "";
   });
 }
 
