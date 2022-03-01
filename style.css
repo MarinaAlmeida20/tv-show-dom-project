@@ -14,16 +14,18 @@
 }
 
 .content {
+  overflow: hidden;
   background-color: #fff;
-  max-width: 250px;
+  max-width: 260px;
   display: flex;
-  margin: 30px auto;
+  margin: 20px auto;
   flex-wrap: wrap;
-  justify-content: flex-start;
   flex-direction: column;
   align-items: center;
   border-radius: 5px;
-  box-shadow: 0 1px 6px 0 rgba(32, 33, 36, 0.28);
+  box-shadow: 0 1px 6px 0 rgb(32 33 36 / 28%);
+  height: 31vw;
+  word-break: break-all;
 }
 
 .heading {
@@ -41,8 +43,10 @@
 }
 
 p {
+  margin: 0;
   width: 220px;
   color: #979696;
+  padding-top: 5px;
 }
 
 .image {
