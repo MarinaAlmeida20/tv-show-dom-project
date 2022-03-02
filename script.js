@@ -13,15 +13,16 @@ let allEpisodes = getAllEpisodes();
 function setup() {
   allEpisodes = getAllEpisodes(); // API
   makePageForEpisodes(allEpisodes);
-  selectAllEpisodes(allEpisodes);
+  //selectAllEpisodes(allEpisodes);
   searchBar.addEventListener("keyup", onSearchKeyUp);
-  // selectEpisodes.addEventListener("click", episodeSelected);
+  selectEpisodes.addEventListener("change", episodeSelected);
 }
 
 function makePageForEpisodes(episodeList) {
   const ulElem = document.getElementById("episodesList");
   ulElem.innerHTML = "";
 
+  console.log(`number of episodes is ${episodeList.length}`);
   episodeList.forEach((episode) => {
     const li = document.createElement("li");
     li.setAttribute("class", "content");
@@ -38,16 +39,18 @@ function makePageForEpisodes(episodeList) {
 
   const optionEpisodes = document.createElement("option");
 
-  // add the option in select
-  episodeList.filter((e) => {
-    let optionElementReference = new Option(
-      `S0${e.season}E${e.number.toString().padStart(2, "0")} - ${e.name}`,
-      `${e.name}`
-    );
-    // console.log(optionElementReference);
-    selectEpisodes.add(optionElementReference);
-  });
-  selectEpisodes.appendChild(optionEpisodes);
+  if (episodeList.length > 1) {
+    // add the option in select
+    episodeList.filter((e) => {
+      let optionElementReference = new Option(
+        `S0${e.season}E${e.number.toString().padStart(2, "0")} - ${e.name}`,
+        `${e.name}`
+      );
+      // console.log(optionElementReference);
+      selectEpisodes.add(optionElementReference);
+    });
+    selectEpisodes.appendChild(optionEpisodes);
+  }
 }
 
 function onSearchKeyUp(event) {
@@ -71,32 +74,14 @@ function displayingTotal() {
   totalEpisodesDisplayed.innerHTML = `Displaying ${filteredCount}/${allCount} episode(s)`;
 }
 
-// function selectAllEpisodes(episodeList) {
-//   const optionEpisodes = document.createElement("option");
-
-//   // add the option in select
-//   episodeList.filter((e) => {
-//     let optionElementReference = new Option(
-//       `S0${e.season}E${e.number.toString().padStart(2, "0")} - ${e.name}`,
-//       `${e.name}`
-//     );
-//     // console.log(optionElementReference);
-//     selectEpisodes.add(optionElementReference);
-//   });
-//   selectEpisodes.appendChild(optionEpisodes);
-// }
-
 function episodeSelected(e) {
   searchEpisode = e.target.value;
-  console.log(searchEpisode);
   let arr = [];
 
-  arr.push(searchEpisode);
-
-  console.log(arr);
   allEpisodes.filter((element) => {
     if (element.name === searchEpisode) {
-      return makePageForEpisodes(arr);
+      arr.push(element);
+      makePageForEpisodes(arr);
     }
   });
 }
