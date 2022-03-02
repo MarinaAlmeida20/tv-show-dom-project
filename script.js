@@ -7,13 +7,16 @@ let searchTerm = "";
 let searchEpisode = "";
 let filteredCount;
 let allCount;
-let allEpisodes = getAllEpisodes();
+
+let currentEpisodes = [];
 
 // setUp
 function setup() {
-  allEpisodes = getAllEpisodes(); // API
-  makePageForEpisodes(allEpisodes);
-  //selectAllEpisodes(allEpisodes);
+  sendRequest(82).then((data) => {
+    currentEpisodes = data;
+    makePageForEpisodes(currentEpisodes);
+    episodeSelected(currentEpisodes);
+  });
   searchBar.addEventListener("keyup", onSearchKeyUp);
   selectEpisodes.addEventListener("change", episodeSelected);
 }
@@ -22,15 +25,12 @@ function makePageForEpisodes(episodeList) {
   const ulElem = document.getElementById("episodesList");
   ulElem.innerHTML = "";
 
-  console.log(`number of episodes is ${episodeList.length}`);
   episodeList.forEach((episode) => {
     const li = document.createElement("li");
     li.setAttribute("class", "content");
-    // let episodeNumber = episode.number.toString().padStart(2, "0");
+    let episodeNumber = episode.number.toString().padStart(2, "0");
     li.innerHTML = `
-    <h3 class="heading">${episode.name} - S0${episode.season}E${episode.number
-      .toString()
-      .padStart(2, "0")}</h3>
+    <h3 class="heading">${episode.name} - S0${episode.season}E${episodeNumber}</h3>
     <img class="image" src="${episode.image.medium}" />
     <p>${episode.summary}</p>
     `;
@@ -46,7 +46,6 @@ function makePageForEpisodes(episodeList) {
         `S0${e.season}E${e.number.toString().padStart(2, "0")} - ${e.name}`,
         `${e.name}`
       );
-      // console.log(optionElementReference);
       selectEpisodes.add(optionElementReference);
     });
     selectEpisodes.appendChild(optionEpisodes);
@@ -56,7 +55,7 @@ function makePageForEpisodes(episodeList) {
 function onSearchKeyUp(event) {
   searchTerm = event.target.value.toLowerCase();
 
-  const filteredEpisodes = allEpisodes.filter((episode) => {
+  const filteredEpisodes = currentEpisodes.filter((episode) => {
     return (
       episode.name.toLowerCase().includes(searchTerm) ||
       episode.summary.toLowerCase().includes(searchTerm)
@@ -64,7 +63,7 @@ function onSearchKeyUp(event) {
   });
 
   filteredCount = filteredEpisodes.length;
-  allCount = allEpisodes.length;
+  allCount = currentEpisodes.length;
 
   displayingTotal();
   makePageForEpisodes(filteredEpisodes);
@@ -75,15 +74,29 @@ function displayingTotal() {
 }
 
 function episodeSelected(e) {
+  // console.log(e.target.value);
   searchEpisode = e.target.value;
+  // console.log(searchEpisode);
   let arr = [];
 
-  allEpisodes.filter((element) => {
+  currentEpisodes.filter((element) => {
     if (element.name === searchEpisode) {
       arr.push(element);
       makePageForEpisodes(arr);
     }
   });
+  // console.log(arr);
+}
+
+function sendRequest(showId) {
+  const urlForTheRequest = `https://api.tvmaze.com/shows/${showId}/episodes`;
+
+  return fetch(urlForTheRequest)
+    .then((res) => res.json())
+    .then((data) => {
+      return data;
+    })
+    .catch((err) => console.log(err));
 }
 
 window.onload = setup;
