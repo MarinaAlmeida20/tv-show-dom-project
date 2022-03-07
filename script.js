@@ -15,7 +15,6 @@ function setup() {
   sendRequest(82).then((data) => {
     currentEpisodes = data;
     makePageForEpisodes(currentEpisodes);
-    episodeSelected(currentEpisodes);
   });
   searchBar.addEventListener("keyup", onSearchKeyUp);
   selectEpisodes.addEventListener("change", episodeSelected);
@@ -74,9 +73,7 @@ function displayingTotal() {
 }
 
 function episodeSelected(e) {
-  // console.log(e.target.value);
-  searchEpisode = e.target.value;
-  // console.log(searchEpisode);
+  searchEpisode = e.target?.value;
   let arr = [];
 
   currentEpisodes.filter((element) => {
@@ -85,7 +82,6 @@ function episodeSelected(e) {
       makePageForEpisodes(arr);
     }
   });
-  // console.log(arr);
 }
 
 function sendRequest(showId) {
