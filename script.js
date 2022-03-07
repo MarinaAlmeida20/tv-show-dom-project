@@ -42,7 +42,7 @@ function makePageForEpisodes(episodeList) {
     // add the option in select
     episodeList.filter((e) => {
       let optionElementReference = new Option(
-        `S0${e.season}E${e.number.toString().padStart(2, "0")} - ${e.name}`,
+        `${e.name} - S0${e.season}E${e.number.toString().padStart(2, "0")}`,
         `${e.name}`
       );
       selectEpisodes.add(optionElementReference);
