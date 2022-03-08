@@ -1,0 +1,22 @@
+{
+  "name": "tv-show-dom-project",
+  "version": "1.0.0",
+  "description": "A starting point for CYF's TV show DOM project",
+  "main": "episodes.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarinaAlmeida20/tv-show-dom-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MarinaAlmeida20/tv-show-dom-project/issues"
+  },
+  "homepage": "https://github.com/MarinaAlmeida20/tv-show-dom-project#readme",
+  "devDependencies": {
+    "eslint": "^8.9.0"
+  }
+}

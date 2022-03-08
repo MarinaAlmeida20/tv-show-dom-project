@@ -3,17 +3,37 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | My Name (My GitHub username)</title>
+    <title>TV Show Project | Marina (GitHub: MarinaAlmeida20)</title>
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
 
   <body>
     <div id="root">
+      <div class="searchWrapper">
+        <select name="episodes" id="select-episodes">
+          <!-- <option value="" selected>Select an Episode</option> -->
+        </select>
+
+        <input
+          type="text"
+          name="searchBar"
+          id="searchBar"
+          autocomplete="off"
+          placeholder="search"
+          autofocus
+          onfocus="this.value=''"
+        />
+        <p class="totalEpisodesDisplayed" id="totalEpisodesDisplayed">
+          Displaying 73/73 episode(s)
+        </p>
+      </div>
+      <ul id="episodesList"></ul>
     </div>
 
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
+    <script src="shows.js"></script>
 
     <!-- Loads YOUR javascript code -->
     <script src="script.js"></script>
