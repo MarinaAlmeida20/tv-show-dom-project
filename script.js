@@ -16,7 +16,7 @@ let currentEpisodes = [];
 
 // setUp
 function setup() {
-  sendRequest(82).then((data) => {
+  sendRequest(1).then((data) => {
     currentEpisodes = data;
     makePageForEpisodes(currentEpisodes);
   });
@@ -108,7 +108,7 @@ function sendRequest(showId) {
 
 // show witch id selected
 
-let idShows = selectShow.addEventListener("click", function showSelected(e) {
+selectShow.addEventListener("click", function showSelected(e) {
   searchShow = e.target.value;
   sendRequest(searchShow).then((anything) => {
     currentEpisodes = anything;
