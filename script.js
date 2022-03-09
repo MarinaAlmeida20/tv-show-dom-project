@@ -110,8 +110,8 @@ function sendRequest(showId) {
 
 selectShow.addEventListener("click", function showSelected(e) {
   searchShow = e.target.value;
-  sendRequest(searchShow).then((anything) => {
-    currentEpisodes = anything;
+  sendRequest(searchShow).then((showIdSelected) => {
+    currentEpisodes = showIdSelected;
     makePageForEpisodes(currentEpisodes);
   });
 });
