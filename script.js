@@ -14,15 +14,34 @@ let allCount;
 
 let currentEpisodes = [];
 
+searchBar.addEventListener("keyup", onSearchKeyUp);
+selectEpisodes.addEventListener("change", episodeSelected);
+selectShow.addEventListener("change", showSelected);
+
 // setUp
 function setup() {
-  sendRequest(19).then((data) => {
+  const allShows = getAllShows();
+  sendRequest(167).then((data) => {
     currentEpisodes = data;
     makePageForEpisodes(currentEpisodes);
   });
-  nameShow();
-  searchBar.addEventListener("keyup", onSearchKeyUp);
-  selectEpisodes.addEventListener("change", episodeSelected);
+  makeSelectMenuForShows(allShows);
+}
+
+// fetch episodes and shows
+function sendRequest(showId) {
+  const urlForTheRequest = `https://api.tvmaze.com/shows/${showId}/episodes`;
+  const urlForTheCast = `http://api.tvmaze.com/shows/${showId}?embed=cast`;
+  // console.log(showId);
+
+  fetch(urlForTheCast)
+    .then((res) => res.json())
+    .then((data) => data);
+
+  return fetch(urlForTheRequest)
+    .then((res) => res.json())
+    .then((data) => data)
+    .catch((err) => console.log(err));
 }
 
 // show all the episodes
@@ -60,7 +79,6 @@ function makePageForEpisodes(episodeList) {
       selectEpisodes.add(optionElementReference);
     });
     selectEpisodes.appendChild(optionEpisodes);
-    console.log(selectEpisodes);
   }
 }
 
@@ -78,16 +96,11 @@ function onSearchKeyUp(event) {
   filteredCount = filteredEpisodes.length;
   allCount = currentEpisodes.length;
 
-  displayingTotal();
+  totalEpisodesDisplayed.innerHTML = `Displaying ${filteredCount}/${allCount} episode(s)`;
   makePageForEpisodes(filteredEpisodes);
 }
 
-// display the total number of episodes
-function displayingTotal() {
-  totalEpisodesDisplayed.innerHTML = `Displaying ${filteredCount}/${allCount} episode(s)`;
-}
-
-// episode selected, eventlistener
+// target the episode in select
 function episodeSelected(e) {
   searchEpisode = e.target?.value;
   let arr = [];
@@ -100,47 +113,38 @@ function episodeSelected(e) {
   });
 }
 
-// fetch episodes
-function sendRequest(showId) {
-  const urlForTheRequest = `https://api.tvmaze.com/shows/${showId}/episodes`;
-  // console.log(showId);
-
-  return fetch(urlForTheRequest)
-    .then((res) => res.json())
-    .then((data) => data)
-    .catch((err) => console.log(err));
-}
-
-// show witch id selected
-
-selectShow.addEventListener("click", function showSelected(e) {
+// target the show in select
+function showSelected(e) {
   searchShow = e.target.value;
   sendRequest(searchShow).then((showIdSelected) => {
     currentEpisodes = showIdSelected;
     makePageForEpisodes(currentEpisodes);
   });
-});
+}
 
-// console.log(idShows);
-// created the select shows and fetch shows
-function nameShow() {
-  const urlNameShow = `https://api.tvmaze.com/shows`;
-  fetch(urlNameShow)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.length > 1) {
-        const optionShow = document.createElement("option");
-        data.forEach((e) => {
-          const nameShown = e.name;
-          const idShown = e.id;
-          let optionElementReference = new Option(nameShown, idShown);
-          selectShow.add(optionElementReference);
-        });
-        selectShow.appendChild(optionShow);
-        // console.log(selectShow);
-      }
-    })
-    .catch((err) => console.log(err));
+// created the select shows in alphabetical order
+function makeSelectMenuForShows(shows) {
+  shows.sort((showA, showB) => {
+    const { name: nameA } = showA;
+    const { name: nameB } = showB;
+
+    if (nameA.toLowerCase() < nameB.toLowerCase()) {
+      return -1;
+    } else if (nameA.toLowerCase() > nameB.toLowerCase()) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
+  const optionShow = document.createElement("option");
+  shows.forEach((e) => {
+    const nameShown = e.name;
+    const idShown = e.id;
+    let optionElementReference = new Option(nameShown, idShown);
+    selectShow.add(optionElementReference);
+  });
+  selectShow.appendChild(optionShow);
 }
 
 window.onload = setup;
