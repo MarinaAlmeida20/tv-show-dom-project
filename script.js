@@ -4,6 +4,7 @@ const totalEpisodesDisplayed = document.getElementById(
 );
 const selectEpisodes = document.querySelector("#select-episodes");
 const selectShow = document.querySelector("#select-show");
+const showList = document.getElementById("show-list");
 
 let searchTerm = "";
 let searchEpisode = "";
@@ -26,6 +27,7 @@ function setup() {
     makePageForEpisodes(currentEpisodes);
   });
   makeSelectMenuForShows(allShows);
+  makePageForShows(allShows);
 }
 
 // fetch episodes and shows
@@ -82,6 +84,34 @@ function showSelected(e) {
     currentEpisodes = showIdSelected;
     makePageForEpisodes(currentEpisodes);
   });
+}
+
+function makePageForShows(shows) {
+  shows.forEach((show) => {
+    const showElement = document.createElement("div");
+    const heading = document.createElement("h3");
+    const summary = document.createElement("p");
+
+    heading.innerText = `${show.name} - Runtime:${show.runtime}`;
+    summary.innerHTML = show.summary;
+
+    showElement.className = "episode";
+
+    showElement.appendChild(heading);
+    showElement.appendChild(summary);
+    showList.appendChild(showElement);
+
+    showElement.addEventListener("click", () => {
+      const showId = show.id;
+      sendRequest(showId).then((data) => {
+        currentEpisodes = data;
+        showList.style.display = "none";
+        makePageForEpisodes(currentEpisodes);
+        // makeSelectMenuForEpisodes(currentEpisodes);
+      });
+    });
+  });
+  return shows;
 }
 
 // show all the episodes
