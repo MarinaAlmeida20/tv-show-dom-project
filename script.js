@@ -16,7 +16,7 @@ let currentEpisodes = [];
 
 // setUp
 function setup() {
-  sendRequest(1).then((data) => {
+  sendRequest(19).then((data) => {
     currentEpisodes = data;
     makePageForEpisodes(currentEpisodes);
   });
@@ -33,13 +33,16 @@ function makePageForEpisodes(episodeList) {
 
   episodeList.forEach((episode) => {
     const li = document.createElement("li");
-    li.setAttribute("class", "content");
     let episodeNumber = episode.number.toString().padStart(2, "0");
+    let episodeSeason = episode.season.toString().padStart(2, "0");
+    li.setAttribute("class", "content");
+    // console.log(episodeSesion);
     li.innerHTML = `
-    <h3 class="heading">${episode.name} - S0${episode.season}E${episodeNumber}</h3>
+    <h3 class="heading">${episode.name} - S${episodeSeason}E${episodeNumber}</h3>
     <img class="image" src="${episode.image.medium}" />
     <p>${episode.summary}</p>
     `;
+    // console.log(li);
     ulElem.appendChild(li);
   });
 
@@ -47,8 +50,10 @@ function makePageForEpisodes(episodeList) {
     selectEpisodes.innerHTML = "";
     // add the option in select
     episodeList.filter((e) => {
+      let episodeNumber = e.number.toString().padStart(2, "0");
+      let episodeSeason = e.season.toString().padStart(2, "0");
       let optionElementReference = new Option(
-        `${e.name} - S0${e.season}E${e.number.toString().padStart(2, "0")}`,
+        `${e.name} - S${episodeSeason}E${episodeNumber}`,
         `${e.name}`
       );
 
