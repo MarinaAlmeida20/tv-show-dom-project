@@ -20,7 +20,7 @@ selectShow.addEventListener("change", showSelected);
 
 // setUp
 function setup() {
-  const allShows = getAllShows();
+  let allShows = getAllShows();
   sendRequest(167).then((data) => {
     currentEpisodes = data;
     makePageForEpisodes(currentEpisodes);
@@ -31,7 +31,7 @@ function setup() {
 // fetch episodes and shows
 function sendRequest(showId) {
   const urlForTheRequest = `https://api.tvmaze.com/shows/${showId}/episodes`;
-  const urlForTheCast = `http://api.tvmaze.com/shows/${showId}?embed=cast`;
+  const urlForTheCast = `https://api.tvmaze.com/shows/${showId}?embed=cast`;
   // console.log(showId);
 
   fetch(urlForTheCast)
@@ -42,44 +42,6 @@ function sendRequest(showId) {
     .then((res) => res.json())
     .then((data) => data)
     .catch((err) => console.log(err));
-}
-
-// show all the episodes
-function makePageForEpisodes(episodeList) {
-  const ulElem = document.getElementById("episodesList");
-  ulElem.innerHTML = "";
-  const optionEpisodes = document.createElement("option");
-
-  episodeList.forEach((episode) => {
-    const li = document.createElement("li");
-    let episodeNumber = episode.number.toString().padStart(2, "0");
-    let episodeSeason = episode.season.toString().padStart(2, "0");
-    li.setAttribute("class", "content");
-    // console.log(episodeSesion);
-    li.innerHTML = `
-    <h3 class="heading">${episode.name} - S${episodeSeason}E${episodeNumber}</h3>
-    <img class="image" src="${episode.image.medium}" />
-    <p>${episode.summary}</p>
-    `;
-    // console.log(li);
-    ulElem.appendChild(li);
-  });
-
-  if (episodeList.length > 1) {
-    selectEpisodes.innerHTML = "";
-    // add the option in select
-    episodeList.filter((e) => {
-      let episodeNumber = e.number.toString().padStart(2, "0");
-      let episodeSeason = e.season.toString().padStart(2, "0");
-      let optionElementReference = new Option(
-        `${e.name} - S${episodeSeason}E${episodeNumber}`,
-        `${e.name}`
-      );
-
-      selectEpisodes.add(optionElementReference);
-    });
-    selectEpisodes.appendChild(optionEpisodes);
-  }
 }
 
 // search
@@ -122,6 +84,44 @@ function showSelected(e) {
   });
 }
 
+// show all the episodes
+function makePageForEpisodes(episodeList) {
+  const ulElem = document.getElementById("episodesList");
+  ulElem.innerHTML = "";
+  let optionEpisodes = document.createElement("option");
+
+  episodeList.forEach((episode) => {
+    const li = document.createElement("li");
+    let episodeNumber = episode.number.toString().padStart(2, "0");
+    let episodeSeason = episode.season.toString().padStart(2, "0");
+    li.setAttribute("class", "content");
+    // console.log(episodeSesion);
+    li.innerHTML = `
+    <h3 class="heading">${episode.name} - S${episodeSeason}E${episodeNumber}</h3>
+    <img class="image" src="${episode.image.medium}" />
+    <p>${episode.summary}</p>
+    `;
+    // console.log(li);
+    ulElem.appendChild(li);
+  });
+
+  if (episodeList.length > 0) {
+    selectEpisodes.innerHTML = "";
+    // add the option in select
+    episodeList.filter((e) => {
+      let episodeNumber = e.number.toString().padStart(2, "0");
+      let episodeSeason = e.season.toString().padStart(2, "0");
+      optionEpisodes = new Option(
+        `${e.name} - S${episodeSeason}E${episodeNumber}`,
+        `${e.name}`
+      );
+
+      selectEpisodes.add(optionEpisodes);
+    });
+    selectEpisodes.appendChild(optionEpisodes);
+  }
+}
+
 // created the select shows in alphabetical order
 function makeSelectMenuForShows(shows) {
   shows.sort((showA, showB) => {
@@ -137,12 +137,13 @@ function makeSelectMenuForShows(shows) {
     }
   });
 
-  const optionShow = document.createElement("option");
+  let optionShow = document.createElement("option");
+
   shows.forEach((e) => {
     const nameShown = e.name;
     const idShown = e.id;
-    let optionElementReference = new Option(nameShown, idShown);
-    selectShow.add(optionElementReference);
+    optionShow = new Option(nameShown, idShown);
+    selectShow.add(optionShow);
   });
   selectShow.appendChild(optionShow);
 }
