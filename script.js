@@ -16,11 +16,12 @@ let currentEpisodes = [];
 
 // setUp
 function setup() {
+  const allShows = getAllShows();
   sendRequest(19).then((data) => {
     currentEpisodes = data;
     makePageForEpisodes(currentEpisodes);
   });
-  nameShow();
+  nameShow(allShows);
   searchBar.addEventListener("keyup", onSearchKeyUp);
   selectEpisodes.addEventListener("change", episodeSelected);
 }
@@ -103,7 +104,14 @@ function episodeSelected(e) {
 // fetch episodes
 function sendRequest(showId) {
   const urlForTheRequest = `https://api.tvmaze.com/shows/${showId}/episodes`;
+  const urlForTheCast = `http://api.tvmaze.com/shows/${showId}?embed=cast`;
   // console.log(showId);
+
+  fetch(urlForTheCast)
+    .then((res) => res.json())
+    .then((data) => {
+      console.log(data);
+    });
 
   return fetch(urlForTheRequest)
     .then((res) => res.json())
@@ -123,24 +131,29 @@ selectShow.addEventListener("click", function showSelected(e) {
 
 // console.log(idShows);
 // created the select shows and fetch shows
-function nameShow() {
-  const urlNameShow = `https://api.tvmaze.com/shows`;
-  fetch(urlNameShow)
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.length > 1) {
-        const optionShow = document.createElement("option");
-        data.forEach((e) => {
-          const nameShown = e.name;
-          const idShown = e.id;
-          let optionElementReference = new Option(nameShown, idShown);
-          selectShow.add(optionElementReference);
-        });
-        selectShow.appendChild(optionShow);
-        // console.log(selectShow);
-      }
-    })
-    .catch((err) => console.log(err));
+function nameShow(shows) {
+  shows.sort((showA, showB) => {
+    const { name: nameA } = showA;
+    const { name: nameB } = showB;
+
+    if (nameA.toLowerCase() < nameB.toLowerCase()) {
+      return -1;
+    } else if (nameA.toLowerCase() > nameB.toLowerCase()) {
+      return 1;
+    } else {
+      return 0;
+    }
+  });
+
+  const optionShow = document.createElement("option");
+  shows.forEach((e) => {
+    const nameShown = e.name;
+    const idShown = e.id;
+    let optionElementReference = new Option(nameShown, idShown);
+    selectShow.add(optionElementReference);
+  });
+  selectShow.appendChild(optionShow);
+  console.log(selectShow);
 }
 
 window.onload = setup;
